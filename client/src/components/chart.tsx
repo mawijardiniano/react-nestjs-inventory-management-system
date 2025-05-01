@@ -22,6 +22,8 @@ const chartData = [
   { month: "April", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
+  { month: "July", desktop: 220, mobile: 150 },
+  { month: "August", desktop: 240, mobile: 190 },
 ]
 
 const chartConfig = {
@@ -37,11 +39,11 @@ const chartConfig = {
 
 export default function Component() {
   return (
-    <Card>
+    <Card >
       <CardHeader>
         <CardTitle>Area Chart - Gradient</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Showing total visitors for the last 8 months
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -115,7 +117,7 @@ export default function Component() {
               Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              January - August 2024
             </div>
           </div>
         </div>
