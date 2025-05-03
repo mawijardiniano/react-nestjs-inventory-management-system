@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-// Define the user data type
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import './App.css'
 export interface User {
   id: number;
   name: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Product {
@@ -21,10 +21,10 @@ const UsersList: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/users');
+        const response = await axios.get("http://localhost:3000/users");
         setUsers(response.data);
       } catch (error) {
-        console.error('Failed to fetch users:', error);
+        console.error("Failed to fetch users:", error);
       }
     };
 
@@ -32,31 +32,45 @@ const UsersList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-const fetchProduct = async () => {
-  try {
-    const res = await axios.get('http://localhost:3000/product');
-    setProduct(res.data)
-  } catch (error) {
-    console.error('Failed to fetch users:', error);
-  }
-}
-fetchProduct();
-  }, [])
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/product");
+        setProduct(res.data);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+    fetchProduct();
+  }, []);
 
   return (
     <div>
       <h1>Users</h1>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name} {user.createdAt}</li>
+          <p key={user.id}>
+            {user.name} {user.createdAt} {user.updatedAt}
+          </p>
         ))}
       </ul>
-      <h1>Products</h1>
-      <ul>
-        {product.map((products) => (
-          <li key={products.id}>{products.prod_name} {products.prod_price}</li>
-        ))}
-      </ul>
+      <h1 className="text-5xl font-bold">Products</h1>
+
+      <table className="">
+        <thead className="border-2 border-black">
+          <tr className="border-1">
+            <th className="border-2 border-black p-4">name</th>
+            <th className="border-2 border-black p-4">price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {product.map((products) => (
+            <tr key={products.id}>
+              <td className="border-2 border-black p-4">{products.prod_name}</td>
+              <td className="border-2 border-black p-4">{products.prod_price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
