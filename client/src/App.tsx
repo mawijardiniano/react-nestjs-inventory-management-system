@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './App.css'
+import { Button } from "../src/components/ui/button";
+import Layout from "./layout";
 export interface User {
   id: number;
   name: string;
@@ -44,7 +45,8 @@ const UsersList: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <Layout>
+    <div className="flex flex-row">
       <h1>Users</h1>
       <ul>
         {users.map((user) => (
@@ -54,6 +56,7 @@ const UsersList: React.FC = () => {
         ))}
       </ul>
       <h1 className="text-5xl font-bold">Products</h1>
+      <Button>Click Me</Button>
 
       <table className="">
         <thead className="border-2 border-black">
@@ -72,6 +75,7 @@ const UsersList: React.FC = () => {
         </tbody>
       </table>
     </div>
+    </Layout>
   );
 };
 
