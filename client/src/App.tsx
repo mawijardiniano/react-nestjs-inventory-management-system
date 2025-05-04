@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "../src/components/ui/button";
 import Layout from "./layout";
+import Dashboard from "./pages/dashboard/dashboard";
 export interface User {
   id: number;
   name: string;
@@ -46,6 +47,7 @@ const UsersList: React.FC = () => {
 
   return (
     <Layout>
+      <Dashboard/>
     <div className="flex flex-row">
       <h1>Users</h1>
       <ul>
