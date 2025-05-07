@@ -11,7 +11,7 @@ export default function statsCard() {
     <div className="flex flex-row gap-4">
       <Card className="w-72 h-32">
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
+          <CardTitle>Total Product</CardTitle>
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
@@ -20,7 +20,7 @@ export default function statsCard() {
       </Card>
       <Card className="w-72 h-32">
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
+          <CardTitle>Low Stock Items</CardTitle>
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
@@ -29,7 +29,7 @@ export default function statsCard() {
       </Card>
       <Card className="w-72 h-32">
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
+          <CardTitle>Inventory Value</CardTitle>
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
@@ -38,7 +38,7 @@ export default function statsCard() {
       </Card>
       <Card className="w-72 h-32">
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
+          <CardTitle>Out of Stock</CardTitle>
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
