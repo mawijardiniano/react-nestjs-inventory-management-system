@@ -11,3 +11,8 @@ export type Product = {
   prod_description: string;
   category: Category;
 };
+
+export type AddCategory = {
+    category_name: string;
+    category_description: string;
+}
