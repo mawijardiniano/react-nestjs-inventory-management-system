@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { AddCategory } from "@/lib/types";
 import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 type Props = {
   closeModal: () => void;
@@ -39,7 +40,7 @@ const AddCategories = ({ closeModal, onSuccess }: Props) => {
     <div className="bg-white p-6 rounded-lg shadow-lg z-50 w-96">
       <h2 className="text-xl font-bold mb-4">Add Category</h2>
       <form onSubmit={handleSubmit}>
-        <input
+        <Input
           type="text"
           name="category_name"
           placeholder="Name"
@@ -48,7 +49,7 @@ const AddCategories = ({ closeModal, onSuccess }: Props) => {
           className="border p-2 mb-2 w-full"
           required
         />
-        <input
+        <Input
           type="text"
           name="category_description"
           placeholder="Description"
@@ -58,19 +59,19 @@ const AddCategories = ({ closeModal, onSuccess }: Props) => {
           required
         />
         <div className="flex justify-end gap-2">
-          <button
+          <Button
             type="button"
             onClick={closeModal}
             className="px-4 py-2 bg-gray-300 rounded"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             className="px-4 py-2 bg-blue-500 text-white rounded"
           >
             Submit
-          </button>
+          </Button>
         </div>
       </form>
     </div>

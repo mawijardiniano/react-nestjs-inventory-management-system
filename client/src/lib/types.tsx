@@ -16,3 +16,11 @@ export type AddCategory = {
     category_name: string;
     category_description: string;
 }
+
+export type AddProduct = {
+  prod_name: string;
+  prod_price: string;
+  prod_quantity: string;
+  prod_description: string;
+  category_id: string;
+};

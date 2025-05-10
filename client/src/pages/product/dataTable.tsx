@@ -22,6 +22,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input"
 import * as React from "react"
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -51,8 +52,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-        <h1 className="font-medium text-4xl">Products</h1>
+    <div className="w-full">
         <div className="flex items-center py-4">
         <Input
           placeholder="Filter products..."
@@ -111,7 +111,8 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </Table> 
+
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button

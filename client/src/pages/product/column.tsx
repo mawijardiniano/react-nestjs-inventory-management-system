@@ -1,41 +1,60 @@
+// column.ts
 import { ColumnDef } from "@tanstack/react-table";
 import { Product } from "@/lib/types";
 import { Button } from "../../components/ui/button";
-import { ArrowUpDown } from "lucide-react";
 
-export const columns: ColumnDef<Product>[] = [
+export const getColumns = (
+  handleEdit: (product: Product) => void,
+  handleDelete: (id: number) => void
+): ColumnDef<Product>[] => [
   {
     accessorKey: "prod_name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Product Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Product Name",
   },
   {
     accessorKey: "prod_price",
-    header: "Product Price",
+    header: "Price",
   },
   {
     accessorKey: "prod_quantity",
-    header: "Product Quantity",
+    header: "Quantity",
   },
   {
     accessorKey: "prod_description",
-    header: "Product Description",
+    header: "Description",
   },
   {
     accessorKey: "category",
-    header: "Product Category",
+    header: "Category",
     cell: ({ row }) => {
       const category = row.original.category;
       return category?.category_name || "N/A";
+    },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const product = row.original;
+
+      return (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleEdit(product)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleDelete(product.id)}
+          >
+            Delete
+          </Button>
+        </div>
+      );
     },
   },
 ];
