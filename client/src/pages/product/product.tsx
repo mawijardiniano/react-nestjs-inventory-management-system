@@ -5,12 +5,14 @@ import { Product } from "@/lib/types";
 import axios from "axios";
 import AddProductModal from "../../components/modals/addProduct";
 import EditProduct from "../../components/modals/editProduct";
+import DeleteProduct from "../../components/modals/deleteProduct";
 
 const ProductPage = () => {
   const API = "http://localhost:3000/product";
   const [products, setProducts] = useState<Product[]>([]);
   const [isOpen, setOpen] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const fetchProducts = async () => {
@@ -30,19 +32,24 @@ const ProductPage = () => {
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
 
-  const showEditModal = (id:number) => {
-    setSelectedId(id)
-    setShowModal(true)
-  }
+  const showEditModal = (id: number) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
 
   const closeEditModal = () => {
-    setShowModal(false)
-    setSelectedId(null)
-  }
+    setShowModal(false);
+    setSelectedId(null);
+  };
+
+  const openDelete = (id: number) => {
+    setShowDelete(true);
+    setSelectedId(id);
+  };
 
   const onSuccess = () => {
-    fetchProducts()
-  }
+    fetchProducts();
+  };
 
   const handleDelete = async (id: number) => {
     try {
@@ -53,28 +60,49 @@ const ProductPage = () => {
     }
   };
 
-  const columns = getColumns(showEditModal, handleDelete); 
+  const columns = getColumns(showEditModal, openDelete);
 
   return (
     <div>
       <div className="flex flex-row justify-between">
         <h1 className="font-medium text-4xl">Products</h1>
-        <button className="bg-black/90 p-2 text-white rounded-md"onClick={openModal}>Add Product</button>
+        <button
+          className="bg-black/90 p-2 text-white rounded-md"
+          onClick={openModal}
+        >
+          Add Product
+        </button>
       </div>
 
       <DataTable columns={columns} data={products} />
 
       {isOpen && (
-        <AddProductModal
-          onSuccess={fetchProducts}
-          closeModal={closeModal}
-        />
+        <AddProductModal onSuccess={fetchProducts} closeModal={closeModal} />
       )}
 
       {showModal && selectedId !== null && (
-        <EditProduct id={selectedId} onSuccess={onSuccess} closeModal={closeEditModal}/>
-        
+        <EditProduct
+          id={selectedId}
+          onSuccess={onSuccess}
+          closeModal={closeEditModal}
+        />
       )}
+
+     {showDelete && selectedId !== null && (
+  <DeleteProduct
+    id={selectedId}
+    onConfirm={(id) => {
+      handleDelete(id);
+      setShowDelete(false);
+      setSelectedId(null);
+    }}
+    onClose={() => {
+      setShowDelete(false);
+      setSelectedId(null);
+    }}
+  />
+)}
+
     </div>
   );
 };

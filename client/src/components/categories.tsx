@@ -10,6 +10,7 @@ import axios from "axios";
 import { Category } from "../lib/types";
 import AddCategories from "./modals/addCategories";
 import EditCategories from "./modals/editCategories";
+import DeleteCategory from "./modals/deleteCategory";
 import { Button } from "./ui/button";
 
 const Categories = () => {
@@ -18,6 +19,7 @@ const Categories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const fetchCategories = async () => {
     try {
@@ -42,16 +44,27 @@ const Categories = () => {
     setSelectedId(null);
   };
 
+  const openDelete = (id: number) => {
+    setSelectedId(id);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  };
+
   const deleteCategory = async (id: number) => {
     try {
-      const res = await axios.delete(DELETE_API(id));
-      fetchCategories()
+      await axios.delete(DELETE_API(id));
+      fetchCategories();
+      closeDeleteModal();
     } catch (error) {
-      
+      console.error("Error deleting category", error);
     }
-  }
+  };
   const onSuccess = () => {
-    fetchCategories()
+    fetchCategories();
   };
 
   const openModal = () => setOpen(true);
@@ -61,17 +74,27 @@ const Categories = () => {
     <div className="w-full">
       <div className="flex flex-row justify-between px-2 pb-4 w-full">
         <p className="text-3xl font-medium">Categories</p>
-        <Button className="bg-black/90 text-white" onClick={openModal}>Add Category</Button>
+        <Button className="bg-black/90 text-white" onClick={openModal}>
+          Add Category
+        </Button>
       </div>
-    
+
       {isOpen && (
         <AddCategories closeModal={closeModal} onSuccess={fetchCategories} />
-      )} 
-         {showModal && selectedId !== null && (
+      )}
+      {showModal && selectedId !== null && (
         <EditCategories
           id={selectedId}
           closeModal={closeEditModal}
           onSuccess={onSuccess}
+        />
+      )}
+
+      {showDeleteModal && selectedId !== null && (
+        <DeleteCategory
+          id={selectedId}
+          onConfirm={deleteCategory}
+          onClose={closeDeleteModal}
         />
       )}
       <div className="flex flex-wrap gap-4">
@@ -79,16 +102,27 @@ const Categories = () => {
           <Card key={index} className="w-72 h-40">
             <CardContent>
               <CardHeader className="px-0">
-                <CardTitle className="text-2xl">{category.category_name}</CardTitle>
+                <CardTitle className="text-2xl">
+                  {category.category_name}
+                </CardTitle>
                 <CardDescription>
                   {category.category_description}
                 </CardDescription>
               </CardHeader>
               <div className="flex flex-row justify-between">
-              <Button  className="border-gray-200  border-1" onClick={() => handleEdit(category.category_id)}>Edit</Button>
-              <Button className="bg-red-500 text-white" onClick={() => deleteCategory(category.category_id)}>Delete</Button>
+                <Button
+                  className="border-gray-200  border-1"
+                  onClick={() => handleEdit(category.category_id)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  className="bg-red-500 text-white"
+                  onClick={() => openDelete(category.category_id)}
+                >
+                  Delete
+                </Button>
               </div>
-
             </CardContent>
           </Card>
         ))}
