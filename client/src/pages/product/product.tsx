@@ -4,11 +4,14 @@ import { DataTable } from "./dataTable";
 import { Product } from "@/lib/types";
 import axios from "axios";
 import AddProductModal from "../../components/modals/addProduct";
+import EditProduct from "../../components/modals/editProduct";
 
 const ProductPage = () => {
   const API = "http://localhost:3000/product";
   const [products, setProducts] = useState<Product[]>([]);
   const [isOpen, setOpen] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const fetchProducts = async () => {
     try {
@@ -27,9 +30,19 @@ const ProductPage = () => {
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
 
-  const handleEdit = (product: Product) => {
-    console.log("Edit clicked:", product);
-  };
+  const showEditModal = (id:number) => {
+    setSelectedId(id)
+    setShowModal(true)
+  }
+
+  const closeEditModal = () => {
+    setShowModal(false)
+    setSelectedId(null)
+  }
+
+  const onSuccess = () => {
+    fetchProducts()
+  }
 
   const handleDelete = async (id: number) => {
     try {
@@ -40,7 +53,7 @@ const ProductPage = () => {
     }
   };
 
-  const columns = getColumns(handleEdit, handleDelete); 
+  const columns = getColumns(showEditModal, handleDelete); 
 
   return (
     <div>
@@ -56,6 +69,11 @@ const ProductPage = () => {
           onSuccess={fetchProducts}
           closeModal={closeModal}
         />
+      )}
+
+      {showModal && selectedId !== null && (
+        <EditProduct id={selectedId} onSuccess={onSuccess} closeModal={closeEditModal}/>
+        
       )}
     </div>
   );

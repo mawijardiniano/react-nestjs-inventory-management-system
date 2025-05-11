@@ -4,7 +4,7 @@ import { Product } from "@/lib/types";
 import { Button } from "../../components/ui/button";
 
 export const getColumns = (
-  handleEdit: (product: Product) => void,
+  showEditModal: (id: number) => void,
   handleDelete: (id: number) => void
 ): ColumnDef<Product>[] => [
   {
@@ -42,7 +42,7 @@ export const getColumns = (
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handleEdit(product)}
+            onClick={() => showEditModal(product.id)}
           >
             Edit
           </Button>

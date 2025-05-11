@@ -66,7 +66,7 @@ const Categories = () => {
     
       {isOpen && (
         <AddCategories closeModal={closeModal} onSuccess={fetchCategories} />
-      )}
+      )} 
          {showModal && selectedId !== null && (
         <EditCategories
           id={selectedId}
