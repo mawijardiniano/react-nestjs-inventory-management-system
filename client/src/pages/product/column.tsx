@@ -1,7 +1,8 @@
 // column.ts
 import { ColumnDef } from "@tanstack/react-table";
 import { Product } from "@/lib/types";
-import { Button } from "../../components/ui/button";
+import { Trash2 } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 
 export const getColumns = (
   showEditModal: (id: number) => void,
@@ -38,21 +39,19 @@ export const getColumns = (
       const product = row.original;
 
       return (
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
+        <div className="flex gap-6">
+          <Pencil
+          className="text-gray-600"
             onClick={() => showEditModal(product.id)}
           >
             Edit
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
+          </Pencil>
+          <Trash2
+          className="text-red-500"
             onClick={() => handleDelete(product.id)}
           >
             Delete
-          </Button>
+          </Trash2>
         </div>
       );
     },
