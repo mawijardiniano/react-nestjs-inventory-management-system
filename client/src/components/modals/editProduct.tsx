@@ -2,7 +2,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { AddProduct } from "@/lib/types";
+import { AddProduct, Category } from "@/lib/types";
 
 type Props = {
   id: number;
@@ -18,8 +18,10 @@ export default function EditProduct({ id, onSuccess, closeModal }: Props) {
     prod_description: "",
     category_id: "",
   });
+   const [option, setOption] = useState<Category[]>([]);
 
   const EDIT_API = (id: number) => `http://localhost:3000/product/${id}`;
+    const OPTION_API = "http://localhost:3000/categories";
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -59,6 +61,18 @@ export default function EditProduct({ id, onSuccess, closeModal }: Props) {
       console.error("❌ Error submitting form:", error);
     }
   };
+
+    const fetchOptions = async () => {
+    try {
+      const res = await axios.get(OPTION_API);
+      setOption(res.data);
+    } catch (error) {
+      console.error("Error fetching category", error);
+    }
+  };
+  useEffect(() => {
+    fetchOptions();
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black/40 z-40 flex items-center justify-center">
@@ -101,17 +115,19 @@ export default function EditProduct({ id, onSuccess, closeModal }: Props) {
             className="border p-2 mb-2 w-full"
             required
           />
-          <select
+<select
             name="category_id"
             onChange={handleChange}
             value={form.category_id}
-            className="border p-2 mb-4 w-full"
+            className="border p-2 mb-2 w-full"
             required
           >
             <option value="">Select a Category</option>
-            <option value="4">Category 1</option>
-            <option value="8">Category 3</option>
-            <option value="9">Category 2</option>
+            {option.map((item) => (
+              <option key={item.category_id} value={item.category_id}>
+                {item.category_name}
+              </option>
+            ))}
           </select>
 
           <div className="flex justify-end gap-2">

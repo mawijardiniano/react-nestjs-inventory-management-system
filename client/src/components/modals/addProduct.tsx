@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { AddProduct } from "@/lib/types";
+import { AddProduct, Category } from "@/lib/types";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
@@ -17,8 +17,10 @@ export default function AddProductModal({ closeModal, onSuccess }: Props) {
     prod_description: "",
     category_id: "",
   });
+  const [option, setOption] = useState<Category[]>([]);
 
   const ADD_API = "http://localhost:3000/product";
+  const OPTION_API = "http://localhost:3000/categories";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -47,6 +49,18 @@ export default function AddProductModal({ closeModal, onSuccess }: Props) {
       console.error(error);
     }
   };
+
+  const fetchOptions = async () => {
+    try {
+      const res = await axios.get(OPTION_API);
+      setOption(res.data);
+    } catch (error) {
+      console.error("Error fetching category", error);
+    }
+  };
+  useEffect(() => {
+    fetchOptions();
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black/40 bg-opacity-50 z-40 flex items-center justify-center">
@@ -97,9 +111,11 @@ export default function AddProductModal({ closeModal, onSuccess }: Props) {
             required
           >
             <option value="">Select a Category</option>
-            <option value="1">Category 1</option>
-            <option value="2">Category 2</option>
-            <option value="3">Category 3</option>
+            {option.map((item) => (
+              <option key={item.category_id} value={item.category_id}>
+                {item.category_name}
+              </option>
+            ))}
           </select>
 
           <div className="flex justify-end gap-2">
