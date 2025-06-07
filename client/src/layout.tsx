@@ -1,15 +1,11 @@
 import Sidebar from './components/sidebar';
-import { ReactNode } from 'react';
+import { Outlet } from "react-router-dom";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
   return (
     <div className="flex">
       <Sidebar>
-        {children}
+        <Outlet />
       </Sidebar>
     </div>
   );

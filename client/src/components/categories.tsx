@@ -23,7 +23,12 @@ const Categories = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(API);
+           const token = localStorage.getItem("token");
+const res = await axios.get(API, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
       setCategories(res.data);
     } catch (error) {
       console.error("Error fetching", error);
@@ -97,36 +102,38 @@ const Categories = () => {
           onClose={closeDeleteModal}
         />
       )}
-      <div className="flex flex-wrap gap-4">
-        {categories.map((category, index) => (
-          <Card key={index} className="w-72 h-40">
-            <CardContent>
-              <CardHeader className="px-0">
-                <CardTitle className="text-2xl">
-                  {category.category_name}
-                </CardTitle>
-                <CardDescription>
-                  {category.category_description}
-                </CardDescription>
-              </CardHeader>
-              <div className="flex flex-row justify-between">
-                <Button
-                  className="border-gray-200  border-1"
-                  onClick={() => handleEdit(category.category_id)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  className="bg-red-500 text-white"
-                  onClick={() => openDelete(category.category_id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+     <div className="flex flex-wrap gap-4">
+  {categories.map((category, index) => (
+    <Card key={index} className="w-72 h-40 flex justify-center">
+      <CardHeader className="px-4">
+        <CardTitle className="text-2xl">
+          {category.category_name}
+        </CardTitle>
+        <CardDescription className="text-sm text-gray-500">
+          {category.category_description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="px-4 pb-4">
+        <div className="flex flex-row justify-between items-center">
+          <Button
+            variant="outline"
+            className="px-3 py-1 text-sm"
+            onClick={() => handleEdit(category.category_id)}
+          >
+            Edit
+          </Button>
+          <Button
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-sm"
+            onClick={() => openDelete(category.category_id)}
+          >
+            Delete
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
     </div>
   );
 };

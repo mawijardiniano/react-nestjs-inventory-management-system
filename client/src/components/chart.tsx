@@ -1,111 +1,127 @@
-import { TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "../components/ui/card";
 import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+  ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig,
 } from "../components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "July", desktop: 220, mobile: 150 },
-  { month: "August", desktop: 240, mobile: 190 },
-];
+import { TrendingUp } from "lucide-react";
+import {ProductChart, MonthlyChartData} from "../lib/types"
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
+
+interface Product {
+  id: number;
+  prod_name: string;
+  prod_price: string;
+  prod_quantity: number;
+  prod_description: string;
+  category_id: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
+interface MonthlyChartData {
+  key: string;
+  label: string;
+  value: number;
+}
+
+function getLast12Months(): MonthlyChartData[] {
+  const now = new Date();
+  const months: MonthlyChartData[] = [];
+
+  for (let i = 11; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    months.push({
+      key,
+      label: date.toLocaleString("default", { month: "short" }),
+      value: 0,
+    });
+  }
+
+  return months;
+}
+
+const chartConfig: ChartConfig = {
+  totalValue: {
+    label: "Total Value",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig;
+};
 
-export default function Component() {
+export default function InventoryChart() {
+  const [chartData, setChartData] = useState<{ month: string; totalValue: number }[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get<Product[]>("http://localhost:3000/product");
+        const products = res.data;
+
+        const months = getLast12Months();
+        const monthMap = new Map(months.map((m) => [m.key, m]));
+
+        for (const product of products) {
+          const createdAt = product.createdAt
+            ? new Date(product.createdAt)
+            : null;
+
+          if (!createdAt) continue;
+
+          const key = `${createdAt.getFullYear()}-${String(createdAt.getMonth() + 1).padStart(2, "0")}`;
+          const value = parseFloat(product.prod_price) * product.prod_quantity;
+
+          if (monthMap.has(key)) {
+            monthMap.get(key)!.value += value;
+          }
+        }
+
+        setChartData(
+          months.map((m) => ({
+            month: m.label,
+            totalValue: m.value,
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Gradient</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 8 months
-        </CardDescription>
+        <CardTitle>Inventory Value (Last 12 Months)</CardTitle>
+        <CardDescription>Based on product creation dates</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
+          <AreaChart data={chartData} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip content={<ChartTooltipContent />} />
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
-                />
+              <linearGradient id="fillTotal" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-totalValue)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-totalValue)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
+              dataKey="totalValue"
+              type="monotone"
+              fill="url(#fillTotal)"
+              stroke="var(--color-totalValue)"
             />
           </AreaChart>
         </ChartContainer>
@@ -114,10 +130,10 @@ export default function Component() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Inventory trending <TrendingUp className="h-4 w-4" />
             </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - August 2024
+            <div className="text-muted-foreground">
+              Last 12 months from {chartData[0]?.month ?? "-"} to {chartData.at(-1)?.month ?? "-"}
             </div>
           </div>
         </div>

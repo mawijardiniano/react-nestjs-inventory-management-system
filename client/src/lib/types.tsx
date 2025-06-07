@@ -24,3 +24,22 @@ export type AddProduct = {
   prod_description: string;
   category_id: string;
 };
+
+
+export type ProductChart = {
+  id: number;
+  prod_name: string;
+  prod_price: number;
+  prod_quantity: number;
+  prod_description: string;
+  category: Category;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+
+export type MonthlyChartData = {
+  key: string;
+  label: string;
+  value: number;
+}

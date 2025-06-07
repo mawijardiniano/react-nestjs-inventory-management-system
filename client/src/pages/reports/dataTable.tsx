@@ -125,9 +125,14 @@ export function DataTable<TData, TValue>({
         </Button>
       </div>
 
-      <div>
+      <div className="w-full flex flex-row gap-4">
+        <div className="w-full">
 <InventorySummary/>
-<CategoryBreakdown/>
+        </div>
+<div className="w-full">
+  <CategoryBreakdown/>
+</div>
+
       </div>
     </div>
   );

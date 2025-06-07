@@ -8,7 +8,12 @@ const InventorySummary = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get(API);
+     const token = localStorage.getItem("token");
+const res = await axios.get(API, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
       setProducts(res.data);
       console.log(res.data);
     } catch (error) {
@@ -32,8 +37,8 @@ const InventorySummary = () => {
   );
 
   return (
-    <div className="p-4">
-      <div className="w-80 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+    <div className="">
+      <div className="w-full h-70 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
         <h1 className="text-2xl font-bold mb-4 text-gray-800">
           Inventory Summary
         </h1>

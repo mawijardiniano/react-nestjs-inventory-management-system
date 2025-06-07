@@ -5,6 +5,7 @@ import { Category, Product } from "@/lib/types";
 const CategoryBreakdown = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,11 +29,13 @@ const CategoryBreakdown = () => {
   const getProductCount = (categoryId: number) =>
     products.filter((product) => product.category?.category_id === categoryId).length;
 
+  const visibleCategories = showAll ? categories : categories.slice(0, 3);
+
   return (
-    <div className="w-80 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+    <div className="w-full bg-white px-6 py-4 rounded-xl shadow-lg border border-gray-200">
       <h1 className="text-xl font-bold mb-4 text-gray-800">Category Breakdown</h1>
-      <div className="space-y-4">
-        {categories.map((cat) => {
+      <div className="space-y-2">
+        {visibleCategories.map((cat) => {
           const count = getProductCount(cat.category_id);
           const percent = totalProducts > 0 ? Math.round((count / totalProducts) * 100) : 0;
 
@@ -48,11 +51,22 @@ const CategoryBreakdown = () => {
                   style={{ width: `${percent}%` }}
                 ></div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">{count} product{count !== 1 && 's'}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {count} product{count !== 1 && "s"}
+              </p>
             </div>
           );
         })}
       </div>
+
+      {categories.length > 3 && (
+        <p
+          className="text-blue-500 text-sm mt-4 cursor-pointer hover:underline"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "Show less" : "Show more"}
+        </p>
+      )}
     </div>
   );
 };

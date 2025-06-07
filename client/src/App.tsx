@@ -9,14 +9,14 @@ import CategoriesPage from "./pages/categories/categories";
 const App: React.FC = () => {
   return (
     <Router>
-      <Layout>
-        <Routes>
+      <Routes>
+        <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/reports" element={<ReportPage />} />
-        </Routes>
-      </Layout>
+        </Route>
+      </Routes>
     </Router>
   );
 };

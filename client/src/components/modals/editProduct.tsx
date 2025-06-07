@@ -88,7 +88,8 @@ export default function EditProduct({ id, onSuccess, closeModal }: Props) {
             className="border p-2 mb-2 w-full"
             required
           />
-          <Input
+<div className="flex flex-row gap-2">
+            <Input
             type="text"
             name="prod_price"
             onChange={handleChange}
@@ -106,6 +107,7 @@ export default function EditProduct({ id, onSuccess, closeModal }: Props) {
             className="border p-2 mb-2 w-full"
             required
           />
+</div>
           <Input
             type="text"
             name="prod_description"

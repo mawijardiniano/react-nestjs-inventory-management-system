@@ -17,23 +17,70 @@ export default function AddProductModal({ closeModal, onSuccess }: Props) {
     prod_description: "",
     category_id: "",
   });
+
+  const [errors, setErrors] = useState({
+    prod_price: "",
+    prod_quantity: "",
+  });
+
   const [option, setOption] = useState<Category[]>([]);
 
   const ADD_API = "http://localhost:3000/product";
   const OPTION_API = "http://localhost:3000/categories";
 
+const validateField = (name: string, value: string) => {
+  let error = "";
+  if (name === "prod_price") {
+    if (value.trim() === "") {
+      error = "Please enter the product price.";
+    } else if (isNaN(Number(value)) || Number(value) < 0) {
+      error = "Price must be a valid number.";
+    }
+  } else if (name === "prod_quantity") {
+    if (value.trim() === "") {
+      error = "Please enter the quantity in stock.";
+    } else if (isNaN(Number(value)) || Number(value) < 0) {
+      error = "Quantity must be a valid number.";
+    }
+  }
+  setErrors((prev) => ({
+    ...prev,
+    [name]: error,
+  }));
+};
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    if (name === "prod_price" || name === "prod_quantity") {
+      validateField(name, value);
+    }
+  };
+
+  const validateForm = () => {
+    validateField("prod_price", form.prod_price);
+    validateField("prod_quantity", form.prod_quantity);
+
+    return (
+      errors.prod_price === "" &&
+      errors.prod_quantity === "" &&
+      form.prod_price !== "" &&
+      form.prod_quantity !== ""
+    );
   };
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     try {
       const payload = {
         ...form,
@@ -58,6 +105,7 @@ export default function AddProductModal({ closeModal, onSuccess }: Props) {
       console.error("Error fetching category", error);
     }
   };
+
   useEffect(() => {
     fetchOptions();
   }, []);
@@ -76,24 +124,36 @@ export default function AddProductModal({ closeModal, onSuccess }: Props) {
             className="border p-2 mb-2 w-full"
             required
           />
-          <Input
-            type="text"
-            name="prod_price"
-            onChange={handleChange}
-            value={form.prod_price}
-            placeholder="Price"
-            className="border p-2 mb-2 w-full"
-            required
-          />
-          <Input
-            type="text"
-            name="prod_quantity"
-            onChange={handleChange}
-            value={form.prod_quantity}
-            placeholder="Quantity"
-            className="border p-2 mb-2 w-full"
-            required
-          />
+          <div className="flex flex-row gap-2">
+            <div className="w-full">
+              <Input
+                type="text"
+                name="prod_price"
+                onChange={handleChange}
+                value={form.prod_price}
+                placeholder="Price"
+                className="border p-2 mb-1 w-full"
+                required
+              />
+              {errors.prod_price && (
+                <p className="text-red-500 text-sm mt-[-4px]">{errors.prod_price}</p>
+              )}
+            </div>
+            <div className="w-full">
+              <Input
+                type="text"
+                name="prod_quantity"
+                onChange={handleChange}
+                value={form.prod_quantity}
+                placeholder="Quantity"
+                className="border p-2 mb-1 w-full"
+                required
+              />
+              {errors.prod_quantity && (
+                <p className="text-red-500 text-sm mt-[-4px]">{errors.prod_quantity}</p>
+              )}
+            </div>
+          </div>
           <Input
             type="text"
             name="prod_description"
