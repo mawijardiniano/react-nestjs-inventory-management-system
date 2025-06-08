@@ -41,15 +41,22 @@ export default function EditProduct({ id, onSuccess, closeModal }: Props) {
     fetchProduct();
   }, [id]);
 
-  const handleChange = (
+const handleChange = (
   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 ) => {
-  const { value, name } = e.target;
+  const { name, value } = e.target;
+
   setForm((prev) => ({
     ...prev,
-    [name]: name === "category_id" ? Number(value) : value,
+    [name]:
+      name === "category_id" ||
+      name === "prod_price" ||
+      name === "prod_quantity"
+        ? Number(value)
+        : value,
   }));
 };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

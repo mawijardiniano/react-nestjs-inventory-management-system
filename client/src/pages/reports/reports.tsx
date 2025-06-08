@@ -5,6 +5,8 @@ import { Product } from "@/lib/types";
 import axios from "axios";
 import EditProduct from "../../components/modals/editProduct";
 import DeleteProduct from "../../components/modals/deleteProduct";
+import { generatePDFReport } from "../../utils/pdfReport"
+
 
 const ReportPage = () => {
   const API = "http://localhost:3000/product";
@@ -53,6 +55,13 @@ const ReportPage = () => {
     <div>
       <div className="flex flex-row justify-between mb-4">
         <h1 className="font-medium text-4xl">Reports</h1>
+       <button
+  onClick={() => generatePDFReport(products)}
+  className="bg-black px-4 py-1 text-white rounded-md"
+>
+  Generate Report
+</button>
+
       </div>
 
       <DataTable columns={columns} data={products} />
